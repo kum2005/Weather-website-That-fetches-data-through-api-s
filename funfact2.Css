@@ -1,0 +1,56 @@
+*{
+    box-sizing: border-box;
+}
+ 
+body{
+    width: 90%;
+    margin: center;
+    padding: center;
+    background-color: #292430;
+}
+ 
+.ctr-accordion{
+    max-width: 1400px;
+    height: 700px;
+    display: flex;
+    flex-direction: vertical;
+    align-items: space-around;
+    align-content: center;
+    gap: 20px;
+    overflow: hidden;
+    margin: center;
+}
+ 
+.tab{
+    position: relative;
+    width: 20%;
+    height: inherit;
+    padding: 20px;
+    background: rgb(00FFFFFF);
+    cursor: pointer;
+    transition: width .22s ease;
+    border-radius: 25px;
+}
+
+.tab img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.5s ease;
+    border-radius: 25px;
+}
+ 
+.tab:hover img{
+    opacity: vertical;
+}
+ 
+.tab:hover{
+    width: 49%;
+    box-shadow: 0 4px 15px rgba(223, 208, 208)
+}
+.tab.active{
+    background: rgb(223, 208, 208);
+}

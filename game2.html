@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Matching Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            background-color: #e0f7fa;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #game-container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #e0f7fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #1293d9;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .card {
+            width: calc(25% - 20px); /* 4 cards per row, adjusting for gap */
+            height: 150px;
+            background-color: #1293d9;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.3s;
+        }
+
+        .card.flipped {
+            background-color: #004d40;
+        }
+
+        .card.matched {
+            background-color: #4caf50;
+            cursor: default;
+        }
+
+        #result {
+            font-size: 1.5em;
+            color: #00796b;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Weather Matching Game</h1>
+        <div class="card-container" id="card-container"></div>
+        <div id="result" class="hidden"></div>
+    </div>
+
+    <script>
+        const cards = [
+            { id: 1, term: "Cumulus", definition: "Fluffy white clouds" },
+            { id: 2, term: "Stratus", definition: "Gray clouds covering the sky" },
+            { id: 3, term: "Rain", definition: "Precipitation in liquid form" },
+            { id: 4, term: "Hail", definition: "Frozen precipitation in the form of balls" },
+            { id: 5, term: "Condensation", definition: "Water vapor turning into liquid" },
+            { id: 6, term: "Evaporation", definition: "Liquid turning into vapor" },
+            { id: 7, term: "Tornado", definition: "A rotating column of air extending from a storm" },
+            { id: 8, term: "Hurricane", definition: "A large, powerful storm system" }
+        ];
+
+        let cardValues = [...cards, ...cards]; // Duplicate the cards
+        cardValues = shuffle(cardValues); // Shuffle the cards
+
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function createCardElement(card) {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card';
+            cardElement.dataset.id = card.id;
+            cardElement.textContent = card.term;
+            cardElement.onclick = () => flipCard(cardElement, card);
+            return cardElement;
+        }
+
+        function flipCard(cardElement, card) {
+            if (flippedCards.length === 2 || cardElement.classList.contains('flipped') || cardElement.classList.contains('matched')) {
+                return;
+            }
+
+            cardElement.classList.add('flipped');
+            flippedCards.push({ element: cardElement, card });
+
+            if (flippedCards.length === 2) {
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const [firstCard, secondCard] = flippedCards;
+            if (firstCard.card.definition === secondCard.card.definition) {
+                firstCard.element.classList.add('matched');
+                secondCard.element.classList.add('matched');
+                matchedPairs++;
+
+                if (matchedPairs === cards.length) {
+                    showResult();
+                }
+            } else {
+                setTimeout(() => {
+                    firstCard.element.classList.remove('flipped');
+                    secondCard.element.classList.remove('flipped');
+                }, 1000);
+            }
+            flippedCards = [];
+        }
+
+        function showResult() {
+            const resultElement = document.getElementById('result');
+            resultElement.textContent = 'Congratulations! You matched all the pairs!';
+            resultElement.classList.remove('hidden');
+        }
+
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function initGame() {
+            const cardContainer = document.getElementById('card-container');
+            cardValues.forEach(card => {
+                cardContainer.appendChild(createCardElement(card));
+            });
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

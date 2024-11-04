@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Pattern Recognition Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e8f5e9;
+            margin: 0;
+        }
+
+        #game-container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #0c0c8b;
+            margin-bottom: 20px;
+        }
+
+        .pattern {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .pattern img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .options button {
+            padding: 15px;
+            background-color: #1293d9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 1em;
+        }
+
+        .options button:hover {
+            background-color: #1293d9;
+            transform: scale(1.05);
+        }
+
+        .options button:active {
+            transform: scale(0.95);
+        }
+
+        #feedback {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        #result {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Weather Pattern Recognition Game</h1>
+        <div class="pattern" id="pattern"></div>
+        <div class="options" id="options"></div>
+        <div id="feedback" class="hidden"></div>
+        <div id="result" class="hidden"></div>
+    </div>
+
+    <script>
+        const patterns = [
+            {
+                image: 'https://png.pngtree.com/png-vector/20210407/ourmid/pngtree-sun-cartoon-illust-sunny-weather-png-image_3208076.jpg',
+                description: "Sunny",
+                options: ["Sunny", "Cloudy", "Rainy", "Snowy"]
+            },
+            {
+                image: 'https://img.freepik.com/premium-vector/cloudy-vector-illustration-weather-vector-kids-illustration-weather-clipart-baby-element-kawaii_190024-1870.jpg',
+                description: "Cloudy",
+                options: ["Sunny", "Cloudy", "Rainy", "Snowy"]
+            },
+            {
+                image: 'https://img.freepik.com/premium-vector/happy-rainy-weather-cartoon_543090-883.jpg?w=740',
+                description: "Rainy",
+                options: ["Sunny", "Cloudy", "Rainy", "Snowy"]
+            },
+            {
+                image: 'https://cdn.vectorstock.com/i/1000x1000/89/10/kawaii-winter-cloud-snowflake-cartoon-weather-vector-21328910.webp',
+                description: "Snowy",
+                options: ["Sunny", "Cloudy", "Rainy", "Snowy"]
+            }
+        ];
+
+        let currentPatternIndex = 0;
+        let score = 0;
+
+        function loadPattern() {
+            const patternElement = document.getElementById('pattern');
+            const optionsElement = document.getElementById('options');
+            const feedbackElement = document.getElementById('feedback');
+            const resultElement = document.getElementById('result');
+
+            if (currentPatternIndex < patterns.length) {
+                const currentPattern = patterns[currentPatternIndex];
+                patternElement.innerHTML = `<img src="${currentPattern.image}" alt="${currentPattern.description}">`;
+                optionsElement.innerHTML = '';
+                currentPattern.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.onclick = () => checkAnswer(option, currentPattern.description);
+                    optionsElement.appendChild(button);
+                });
+                feedbackElement.classList.add('hidden');
+                resultElement.classList.add('hidden');
+            } else {
+                showResult();
+            }
+        }
+
+        function checkAnswer(selectedOption, correctAnswer) {
+            const feedbackElement = document.getElementById('feedback');
+
+            if (selectedOption === correctAnswer) {
+                score++;
+                feedbackElement.textContent = 'Correct!';
+                feedbackElement.style.color = '#4caf50';
+            } else {
+                feedbackElement.textContent = 'Wrong. The correct answer was: ' + correctAnswer;
+                feedbackElement.style.color = '#f44336';
+            }
+
+            feedbackElement.classList.remove('hidden');
+            currentPatternIndex++;
+            setTimeout(loadPattern, 2000);
+        }
+
+        function showResult() {
+            const patternElement = document.getElementById('pattern');
+            const optionsElement = document.getElementById('options');
+            const feedbackElement = document.getElementById('feedback');
+            const resultElement = document.getElementById('result');
+
+            patternElement.innerHTML = '';
+            optionsElement.innerHTML = '';
+            feedbackElement.classList.add('hidden');
+            resultElement.textContent = `Game over! Your score is ${score} out of ${patterns.length}.`;
+            resultElement.classList.remove('hidden');
+        }
+
+        loadPattern();
+    </script>
+</body>
+</html>

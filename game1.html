@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Trivia Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #d1eafc;
+            margin: 0;
+        }
+
+        #game-container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #1293d9;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .options button {
+            padding: 15px;
+            background-color: #1293d9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 1em;
+        }
+
+        .options button:hover {
+            background-color: #1293d9;
+            transform: scale(1.05);
+        }
+
+        .options button:active {
+            transform: scale(0.95);
+        }
+
+        #feedback {
+            font-size: 1.2em;
+            color: #1293d9;
+            margin-top: 20px;
+        }
+
+        #result {
+            font-size: 1.5em;
+            color: #1293d9;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Weather Trivia Challenge</h1>
+        <div class="question" id="question"></div>
+        <div class="options" id="options"></div>
+        <div id="feedback" class="hidden"></div>
+        <div id="result" class="hidden"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What type of cloud is known for producing thunderstorms?",
+                options: ["Cumulus", "Cumulonimbus", "Stratus", "Cirrus"],
+                answer: "Cumulonimbus"
+            },
+            {
+                question: "What is the process called when water vapor turns into liquid water?",
+                options: ["Evaporation", "Sublimation", "Condensation", "Precipitation"],
+                answer: "Condensation"
+            },
+            {
+                question: "Which layer of the atmosphere contains the ozone layer?",
+                options: ["Troposphere", "Mesosphere", "Exosphere", "Stratosphere"],
+                answer: "Stratosphere"
+            },
+            {
+                question: "Which instrument is used to measure atmospheric pressure?",
+                options: ["Barometer", "Hygrometer", "Thermometer", "Anemometer"],
+                answer: "Barometer"
+            },
+            {
+                question: "Which type of precipitation forms when raindrops freeze before hitting the ground?",
+                options: ["Rain", "Snow", "Hail", "Sleet"],
+                answer: "Sleet"
+            },
+            {
+                question: "What is the name of the scale used to measure the strength of tornadoes?",
+                options: ["Beaufort Scale", "Enhanced Fujita Scale", "Saffir-Simpson Scale", "Richter Scale"],
+                answer: "Enhanced Fujita Scale"
+            },
+            {
+                question: "What phenomenon causes the sky to appear blue?",
+                options: ["Rayleigh scattering", "Refraction", "Reflection", "Absorption"],
+                answer: "Rayleigh scattering"
+            },
+            {
+                question: "Which ocean current is known for bringing warm water to the North Atlantic, affecting the climate of Western Europe?",
+                options: ["California Current", "Humboldt Current", "Gulf Stream", "Kuroshio Current"],
+                answer: "Gulf Stream"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const questionElement = document.getElementById('question');
+            const optionsElement = document.getElementById('options');
+            const feedbackElement = document.getElementById('feedback');
+            const resultElement = document.getElementById('result');
+
+            if (currentQuestionIndex < questions.length) {
+                const currentQuestion = questions[currentQuestionIndex];
+                questionElement.textContent = currentQuestion.question;
+                optionsElement.innerHTML = '';
+                currentQuestion.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.onclick = () => checkAnswer(option);
+                    optionsElement.appendChild(button);
+                });
+                feedbackElement.classList.add('hidden');
+                resultElement.classList.add('hidden');
+            } else {
+                showResult();
+            }
+        }
+
+        function checkAnswer(selectedOption) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const feedbackElement = document.getElementById('feedback');
+
+            if (selectedOption === currentQuestion.answer) {
+                score++;
+                feedbackElement.textContent = 'Correct!';
+                feedbackElement.style.color = '#4caf50';
+            } else {
+                feedbackElement.textContent = 'Wrong answer!';
+                feedbackElement.style.color = '#f44336';
+            }
+
+            feedbackElement.classList.remove('hidden');
+            currentQuestionIndex++;
+            setTimeout(loadQuestion, 1000);
+        }
+
+        function showResult() {
+            const questionElement = document.getElementById('question');
+            const optionsElement = document.getElementById('options');
+            const feedbackElement = document.getElementById('feedback');
+            const resultElement = document.getElementById('result');
+
+            questionElement.textContent = 'Quiz completed! Your score is ' + score + ' out of ' + questions.length + '.';
+
+            optionsElement.innerHTML = '';
+            feedbackElement.classList.add('hidden');
+            resultElement.classList.remove('hidden');
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
